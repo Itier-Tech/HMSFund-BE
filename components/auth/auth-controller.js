@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { v4: uuidv4 } = require("uuid");
 const AuthRepository = require("./auth-repository");
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -15,6 +16,8 @@ module.exports = {
                 throw new Error("User not found");
             }
 
+            const hashedPassword = await bcrypt.hash(user.password, 10);
+
             const isPasswordValid = await bcrypt.compare(
                 password,
                 user.password
@@ -26,8 +29,42 @@ module.exports = {
             const token = jwt.sign(
                 {
                     id: user.id,
-                    email: user.email,
+                    username: user.username,
                     role: user.role,
+                },
+                JWT_SECRET,
+                {
+                    expiresIn: "1h",
+                }
+            );
+            res.status(200).json({ success: true, token });
+        } catch (error) {
+            res.status(401).json({ success: false, message: error.message });
+        }
+    },
+
+    async register(req, res) {
+        const { username, password } = req.body;
+        const repo = new AuthRepository();
+
+        try {
+            const user = await repo.findUserByUsername(username);
+            if (user) {
+                throw new Error("User duplicate");
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const newUser = {
+                id: uuidv4(),
+                username,
+                password: hashedPassword,
+            };
+            const userRef = await repo.createUser(newUser);
+
+            const token = jwt.sign(
+                {
+                    id: newUser.id,
+                    username: newUser.username,
                 },
                 JWT_SECRET,
                 {

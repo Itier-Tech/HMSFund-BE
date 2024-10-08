@@ -16,8 +16,7 @@ module.exports = {
         try {
             const decoded = jwt.verify(token, jwtSecret);
             req.body.userID = decoded.id;
-            req.body.email = decoded.email;
-            req.body.role = decoded.role;
+            req.body.username = decoded.username;
             next();
         } catch (error) {
             return res.status(403).json({
