@@ -39,4 +39,15 @@ module.exports = {
             res.status(401).json({ success: false, message: error.message });
         }
     },
+
+    async getAllUser(req, res) {
+        const repo = new AuthRepository();
+
+        try {
+            const users = await repo.findAll();
+            res.status(200).json({ success: true, users });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
 };

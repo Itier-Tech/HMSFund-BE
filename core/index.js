@@ -18,7 +18,7 @@ class Application {
         this.express.use(morgan("dev"));
         this.express.use(express.json());
 
-        this.express.get("/", (req, res) => {
+        this.express.get("/api", (req, res) => {
             res.send("Welcome to HMS Fund Backend Web Services!");
         });
 
