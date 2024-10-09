@@ -42,16 +42,18 @@ class BannerRepository {
             .from("Banners")
             .update(banner)
             .eq("id", id)
-            .select("*");
+            .select("*")
+            .single();
+            
         if (error) {
             throw new Error(
                 `Error updating banner with ID ${id}: ${error.message}`
             );
         }
-        if (!data.length) {
+        if (!data) {
             throw new Error(`Banner with ID ${id} not found for update.`);
         }
-        return data[0];
+        return data;
     }
 
     async deleteBanner(id) {

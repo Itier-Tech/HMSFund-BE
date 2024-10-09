@@ -1,4 +1,6 @@
 const ActivityRepository = require("./activity-repository");
+const uploadImage = require("../utils/file-helper");
+const deleteImage = require("../utils/file-helper");
 
 const repo = new ActivityRepository();
 
@@ -45,16 +47,29 @@ module.exports = {
 
     async createActivity(req, res) {
         try {
-            const { body } = req;
-            if (!body) {
+            const { title, date, description } = req.body;
+            const file = req.file;
+            
+            if (!title || !date || !file) {
                 return res.status(400).json({
                     success: false,
-                    message: "Activity data is required.",
+                    message: "Activity title, date, and image are required.",
                 });
             }
 
-            const activity = await repo.createActivity(body);
-            res.status(201).json({ success: true, activity });
+            const newActivity = await repo.createActivity({
+                title,
+                date,
+                description,
+                banner_photo: "",
+            });
+
+            const imageUrl = await uploadImage(file, "activity", newActivity.id);
+            const updatedActivity = await repo.updateActivity(newActivity.id, {
+                banner_photo: imageUrl,
+            });
+
+            res.status(201).json({ success: true, activity: updatedActivity });
         } catch (error) {
             res.status(500).json({
                 success: false,
@@ -67,7 +82,8 @@ module.exports = {
     async updateActivity(req, res) {
         try {
             const { id } = req.params;
-            const { body } = req;
+            const { title, date, description } = req.body;
+            const file = req.file;
 
             if (!id) {
                 return res.status(400).json({
@@ -76,12 +92,23 @@ module.exports = {
                 });
             }
 
-            const updatedActivity = await repo.updateActivity(id, body);
-            if (!updatedActivity) {
+            const existingActivity = await repo.findActivityById(id);
+            if (!existingActivity) {
                 return res
                     .status(404)
                     .json({ success: false, message: "Activity not found." });
             }
+
+            let activityData = { title, date, description };
+
+            if (file) {
+                // Upload the new image.
+                const imageUrl = await uploadImage(file, "activities", id);
+                activityData.banner_photo = imageUrl;
+            }
+
+            const updatedActivity = await repo.updateActivity(id, activityData);
+
 
             res.status(200).json({ success: true, activity: updatedActivity });
         } catch (error) {
@@ -103,6 +130,15 @@ module.exports = {
                     message: "Activity ID is required.",
                 });
             }
+
+            const existingActivity = await repo.findActivityById(id);
+            if (!existingActivity) {
+                return res
+                    .status(404)
+                    .json({ success: false, message: "Activity not found." });
+            }
+
+            await deleteImage("activities", existingActivity.banner_photo);
 
             const deleted = await repo.deleteActivity(id);
             if (!deleted) {
