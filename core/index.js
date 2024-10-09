@@ -5,6 +5,9 @@ const serverConfig = require("./config/server-config");
 const db = require("./database/supabase");
 
 const authApis = require("../components/auth/auth-api");
+const activityApis = require("../components/activity/activity-api");
+const announcementApis = require("../components/announcement/announcement-api");
+const bannerApis = require("../components/banner/banner-api");
 
 class Application {
     constructor() {
@@ -23,6 +26,9 @@ class Application {
         });
 
         this.express.use("/api", authApis);
+        this.express.use("/api", activityApis);
+        this.express.use("/api", announcementApis);
+        this.express.use("/api", bannerApis);
     }
 
     getDatabase() {
