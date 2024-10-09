@@ -15,9 +15,6 @@ module.exports = {
             if (!user) {
                 throw new Error("User not found");
             }
-
-            const hashedPassword = await bcrypt.hash(user.password, 10);
-
             const isPasswordValid = await bcrypt.compare(
                 password,
                 user.password
