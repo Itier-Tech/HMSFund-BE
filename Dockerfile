@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Copy the secret.json file
+COPY secret.json secret.json
+
 # Copy the rest of the application code
 COPY . .
 

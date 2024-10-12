@@ -8,13 +8,18 @@ router.get("/banner", bannerController.getAllBanner);
 router.get("/banner/:id", bannerController.getBannerById);
 
 // Protected routes
-router.use(authMiddleware);
-router.post("/banner", upload.single("image"), bannerController.createBanner);
+router.post(
+    "/banner",
+    authMiddleware,
+    upload.single("image"),
+    bannerController.createBanner
+);
 router.put(
     "/banner/:id",
+    authMiddleware,
     upload.single("image"),
     bannerController.updateBanner
 );
-router.delete("/banner/:id", bannerController.deleteBanner);
+router.delete("/banner/:id", authMiddleware, bannerController.deleteBanner);
 
 module.exports = router;

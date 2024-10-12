@@ -8,17 +8,22 @@ router.get("/activity", activityController.getAllActivity);
 router.get("/activity/:id", activityController.getActivityById);
 
 // Protected routes
-router.use(authMiddleware);
 router.post(
     "/activity",
+    authMiddleware,
     upload.single("image"),
     activityController.createActivity
 );
 router.put(
     "/activity/:id",
+    authMiddleware,
     upload.single("image"),
     activityController.updateActivity
 );
-router.delete("/activity/:id", activityController.deleteActivity);
+router.delete(
+    "/activity/:id",
+    authMiddleware,
+    activityController.deleteActivity
+);
 
 module.exports = router;

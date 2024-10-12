@@ -8,6 +8,7 @@ const authApis = require("../components/auth/auth-api");
 const activityApis = require("../components/activity/activity-api");
 const announcementApis = require("../components/announcement/announcement-api");
 const bannerApis = require("../components/banner/banner-api");
+const sheetApis = require("../components/sheet/sheet-api");
 
 class Application {
     constructor() {
@@ -29,6 +30,7 @@ class Application {
         this.express.use("/api", activityApis);
         this.express.use("/api", announcementApis);
         this.express.use("/api", bannerApis);
+        this.express.use("/api", sheetApis);
     }
 
     getDatabase() {

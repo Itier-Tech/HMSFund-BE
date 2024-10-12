@@ -1,5 +1,5 @@
 const BannerRepository = require("./banner-repository");
-const uploadImage = require("../utils/file-helper");
+const uploadImage = require("../util/file-helper");
 
 const repo = new BannerRepository();
 

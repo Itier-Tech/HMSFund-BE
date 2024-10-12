@@ -7,9 +7,20 @@ router.get("/announcement", announcementController.getAllAnnouncement);
 router.get("/announcement/:id", announcementController.getAnnouncementById);
 
 // Protected routes
-router.use(authMiddleware);
-router.post("/announcement", announcementController.createAnnouncement);
-router.put("/announcement/:id", announcementController.updateAnnouncement);
-router.delete("/announcement/:id", announcementController.deleteAnnouncement);
+router.post(
+    "/announcement",
+    authMiddleware,
+    announcementController.createAnnouncement
+);
+router.put(
+    "/announcement/:id",
+    authMiddleware,
+    announcementController.updateAnnouncement
+);
+router.delete(
+    "/announcement/:id",
+    authMiddleware,
+    announcementController.deleteAnnouncement
+);
 
 module.exports = router;
