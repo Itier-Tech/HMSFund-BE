@@ -5,7 +5,10 @@ const repo = new AnnouncementRepository();
 module.exports = {
     async getAllAnnouncement(req, res) {
         try {
-            const announcements = await repo.findAll();
+            const limit = parseInt(req.query.limit, 5) || 5;
+            const offset = parseInt(req.query.offset, 5) || 0;
+
+            const announcements = await repo.findAll({ limit, offset });
             res.status(200).json({ success: true, announcements });
         } catch (error) {
             res.status(500).json({

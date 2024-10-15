@@ -2,7 +2,10 @@ const db = require("../../core/database/supabase");
 
 class ActivityRepository {
     async findAll() {
-        const { data, error } = await db.from("Activities").select("*");
+        const { data, error } = await db
+            .from("Activities")
+            .select("*")
+            .order("date", { ascending: false });
         if (error) {
             throw new Error(`Error fetching activities: ${error.message}`);
         }

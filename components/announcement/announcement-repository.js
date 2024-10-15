@@ -1,8 +1,12 @@
 const db = require("../../core/database/supabase");
 
 class AnnouncementRepository {
-    async findAll() {
-        const { data, error } = await db.from("Announcements").select("*");
+    async findAll({ limit, offset }) {
+        const { data, error } = await db
+            .from("Announcements")
+            .select("*")
+            .order("date", { ascending: false })
+            .range(offset, offset + limit - 1);
         if (error) {
             throw new Error(`Error fetching announcements: ${error.message}`);
         }

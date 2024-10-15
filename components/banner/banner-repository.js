@@ -2,7 +2,10 @@ const db = require("../../core/database/supabase");
 
 class BannerRepository {
     async findAll() {
-        const { data, error } = await db.from("Banners").select("*");
+        const { data, error } = await db
+            .from("Banners")
+            .select("*")
+            .order("date", { ascending: false });
         if (error) {
             throw new Error(`Error fetching banners: ${error.message}`);
         }
@@ -44,7 +47,7 @@ class BannerRepository {
             .eq("id", id)
             .select("*")
             .single();
-            
+
         if (error) {
             throw new Error(
                 `Error updating banner with ID ${id}: ${error.message}`
