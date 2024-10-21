@@ -64,7 +64,7 @@ module.exports = {
                 banner_photo: "",
             });
 
-            const imageUrl = await uploadImage(file, "activity", newActivity.id);
+            const imageUrl = await uploadImage(file, "activities", newActivity.id);
             const updatedActivity = await repo.updateActivity(newActivity.id, {
                 banner_photo: imageUrl,
             });
