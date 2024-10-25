@@ -31,6 +31,7 @@ class AnnouncementRepository {
     }
 
     async createAnnouncement(announcement) {
+        console.log(announcement);
         const { data, error } = await db
             .from("Announcements")
             .insert(announcement)

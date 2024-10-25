@@ -43,4 +43,4 @@ async function deleteImage(folder, imageUrl) {
 }
 
 // module.exports = { uploadImage, deleteImage };
-module.exports = uploadImage, deleteImage;
+module.exports = { uploadImage, deleteImage };

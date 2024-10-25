@@ -1,6 +1,5 @@
 const ActivityRepository = require("./activity-repository");
-const uploadImage = require("../util/file-helper");
-const deleteImage = require("../util/file-helper");
+const { uploadImage, deleteImage } = require("../util/file-helper");
 
 const repo = new ActivityRepository();
 
