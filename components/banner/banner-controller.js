@@ -6,8 +6,18 @@ const repo = new BannerRepository();
 module.exports = {
     async getAllBanner(req, res) {
         try {
-            const banners = await repo.findAll();
-            res.status(200).json({ success: true, banners });
+            const limit = parseInt(req.query.limit, 10) || 5;
+            const offset = parseInt(req.query.offset, 10) || 0;
+
+            const banners = await repo.findAll({ limit, offset });
+            const totalBanners = await repo.getTotalCount();
+            const totalPages = Math.ceil(totalBanners / limit);
+
+            res.status(200).json({
+                success: true,
+                banners,
+                totalPages,
+            });
         } catch (error) {
             res.status(500).json({
                 success: false,

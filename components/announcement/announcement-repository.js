@@ -1,6 +1,17 @@
 const db = require("../../core/database/supabase");
 
 class AnnouncementRepository {
+    async getTotalCount() {
+        const { count, error } = await db
+            .from("Announcements")
+            .select("*", { count: "exact", head: true });
+
+        if (error) {
+            throw new Error(`Error fetching total count: ${error.message}`);
+        }
+        return count || 0;
+    }
+
     async findAll({ limit, offset }) {
         const { data, error } = await db
             .from("Announcements")

@@ -1,11 +1,24 @@
 const db = require("../../core/database/supabase");
 
 class ActivityRepository {
-    async findAll() {
+    async getTotalCount() {
+        const { count, error } = await db
+            .from("Activities")
+            .select("*", { count: "exact", head: true });
+
+        if (error) {
+            throw new Error(`Error fetching total count: ${error.message}`);
+        }
+        return count || 0;
+    }
+
+    async findAll({ limit, offset }) {
         const { data, error } = await db
             .from("Activities")
             .select("*")
-            .order("date", { ascending: false });
+            .order("date", { ascending: false })
+            .range(offset, offset + limit - 1);
+
         if (error) {
             throw new Error(`Error fetching activities: ${error.message}`);
         }

@@ -9,7 +9,14 @@ module.exports = {
             const offset = parseInt(req.query.offset, 5) || 0;
 
             const announcements = await repo.findAll({ limit, offset });
-            res.status(200).json({ success: true, announcements });
+            const totalAnnouncements = await repo.getTotalCount();
+            const totalPages = Math.ceil(totalAnnouncements / limit);
+
+            res.status(200).json({
+                success: true,
+                announcements,
+                totalPages,
+            });
         } catch (error) {
             res.status(500).json({
                 success: false,

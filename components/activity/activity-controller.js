@@ -6,8 +6,17 @@ const repo = new ActivityRepository();
 module.exports = {
     async getAllActivity(req, res) {
         try {
-            const activities = await repo.findAll();
-            res.status(200).json({ success: true, activities });
+            const limit = parseInt(req.query.limit, 10) || 5;
+            const offset = parseInt(req.query.offset, 10) || 0;
+
+            const activities = await repo.findAll({ limit, offset });
+            const totalActivities = await repo.getTotalCount();
+            const totalPages = Math.ceil(totalActivities / limit);
+            res.status(200).json({
+                success: true,
+                activities,
+                totalPages,
+            });
         } catch (error) {
             res.status(500).json({
                 success: false,
@@ -48,7 +57,7 @@ module.exports = {
         try {
             const { title, date, description } = req.body;
             const file = req.file;
-            
+
             if (!title || !date || !file) {
                 return res.status(400).json({
                     success: false,
@@ -63,7 +72,11 @@ module.exports = {
                 banner_photo: "",
             });
 
-            const imageUrl = await uploadImage(file, "activities", newActivity.id);
+            const imageUrl = await uploadImage(
+                file,
+                "activities",
+                newActivity.id
+            );
             const updatedActivity = await repo.updateActivity(newActivity.id, {
                 banner_photo: imageUrl,
             });
@@ -107,7 +120,6 @@ module.exports = {
             }
 
             const updatedActivity = await repo.updateActivity(id, activityData);
-
 
             res.status(200).json({ success: true, activity: updatedActivity });
         } catch (error) {
