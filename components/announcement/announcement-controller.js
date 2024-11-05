@@ -5,8 +5,8 @@ const repo = new AnnouncementRepository();
 module.exports = {
     async getAllAnnouncement(req, res) {
         try {
-            const limit = parseInt(req.query.limit, 5) || 5;
-            const offset = parseInt(req.query.offset, 5) || 0;
+            const limit = parseInt(req.query.limit, 10) || 5;
+            const offset = parseInt(req.query.offset, 10) || 0;
 
             const announcements = await repo.findAll({ limit, offset });
             const totalAnnouncements = await repo.getTotalCount();
