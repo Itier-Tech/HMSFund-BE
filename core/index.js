@@ -40,9 +40,6 @@ class Application {
     run() {
         this.express.listen(this.serverConfig.port, () => {
             this.setupServer();
-            console.log(
-                `Server is running on http://localhost:${this.serverConfig.port}`
-            );
         });
     }
 }

@@ -56,14 +56,12 @@ module.exports = {
     async createAnnouncement(req, res) {
         try {
             const { body } = req;
-            console.log("Boyd", body);
             if (!body) {
                 return res.status(400).json({
                     success: false,
                     message: "Announcement data is required.",
                 });
             }
-            console.log("MASUK SINI");
 
             const announcement = await repo.createAnnouncement(body);
             res.status(201).json({ success: true, announcement });

@@ -36,7 +36,6 @@ class SheetRepository {
         // Pastikan folder utama dapat diakses
         try {
             const folderCheck = await drive.files.get({ fileId: mainFolderId });
-            console.log(`Main Folder Found: ${folderCheck.data.name}`);
         } catch (err) {
             console.error("Failed to access main folder:", err.message);
             throw new Error("Main folder not found or not accessible.");
@@ -54,9 +53,6 @@ class SheetRepository {
             if (searchResponse.data.files.length > 0) {
                 // Folder ditemukan
                 subFolderId = searchResponse.data.files[0].id;
-                console.log(
-                    `Sub-folder already exists for NIM ${nim}: ${subFolderId}`
-                );
             } else {
                 // Buat folder baru jika tidak ditemukan
                 const folderMetadata = {
@@ -71,9 +67,6 @@ class SheetRepository {
                 });
 
                 subFolderId = folderResponse.data.id;
-                console.log(
-                    `Sub-folder created for NIM ${nim}: ${subFolderId}`
-                );
             }
         } catch (error) {
             console.error(
@@ -86,8 +79,6 @@ class SheetRepository {
         // Upload files ke dalam sub-folder
         for (const file of files) {
             try {
-                console.log(`Uploading file: ${file.originalname}`);
-
                 const fileMetadata = {
                     name: file.originalname || `file_${Date.now()}`,
                     parents: [subFolderId],
@@ -123,8 +114,6 @@ class SheetRepository {
                 );
             }
         }
-
-        console.log("File links:", fileLinks);
         return fileLinks;
     }
 

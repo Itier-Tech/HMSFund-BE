@@ -58,7 +58,6 @@ module.exports = {
         try {
             const { title, date } = req.body;
             const file = req.file;
-            console.log(title, date, file);
 
             if (!title || !date || !file) {
                 return res.status(400).json({
