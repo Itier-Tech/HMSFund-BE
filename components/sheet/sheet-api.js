@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const sheetController = require("./sheet-controller");
+const multer = require("multer");
 
-router.post("/save-data", sheetController.saveData);
+const upload = multer({ dest: "uploads/" });
+
+router.post("/save-data", upload.any(), sheetController.saveData);
 
 module.exports = router;
